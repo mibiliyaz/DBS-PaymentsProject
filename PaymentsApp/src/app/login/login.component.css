@@ -1,0 +1,48 @@
+.cen {
+    position: absolute;
+    border: 2px solid red;
+    text-align: center;
+    vertical-align: middle;
+    padding: 264px 412px;
+    top:40px;
+    left: 280px;
+}
+.sec1 {
+    position: absolute;
+    background-color: antiquewhite;
+    color: black;
+    padding: 65px 40px;
+    text-align: center;
+    left: 0.5px;
+    top: 0.5px;
+}
+.sec2 {
+    position: absolute;
+    padding: 264px 207px;
+    left: 410px;
+    top: 0px;
+    background-image: url("https://raw.githubusercontent.com/mibiliyaz/DBS-PaymentsProject/main/imgs/DBSTech.jpg");
+    background-repeat: no-repeat;
+    background-size: 417px 606px;
+}
+p {
+    font-size: 15pt; 
+    /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+}
+.lef {
+    text-align: left;
+    font-size: 12pt; 
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+input {
+    height: 30px; 
+    width: 320px;
+}
+button {
+    width: 80px; 
+    height: 30px; 
+    font-weight: bold;
+}
+a {
+    color: rgb(68, 68, 68);
+}

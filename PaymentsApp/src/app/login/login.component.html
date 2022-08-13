@@ -1,0 +1,14 @@
+<div class="cen" style="left: 220;">
+    <div class="sec1">
+        <img src="https://raw.githubusercontent.com/mibiliyaz/DBS-PaymentsProject/main/imgs/DBS-BrandLogo.png" style="width: 185px; border: 2px solid white;" alt="logo"> <br><br><p>Please login to your account</p><br>
+        <div class="lef">
+          &nbsp; Email: <br>
+          <input type="email" placeholder="Enter your email" [(ngModel)]="uname" required><br><br>
+          &nbsp; Password: <br>
+          <input type="password" placeholder="Enter your password" [(ngModel)]="upswd" required>
+        </div><br><br>
+        <button type="submit" (click)="onSubmit()">Login</button><br><br>
+        <a href="" (click)="forgot();">Forgot password?</a>
+    </div>
+    <div class="sec2"></div>
+</div>

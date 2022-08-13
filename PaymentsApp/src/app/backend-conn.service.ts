@@ -39,7 +39,7 @@ export class BackendConnService {
 
   getRecDetails(rAccNo:number) {
     let name:any;
-    this.httpcli.get(this.url+"name?id"+rAccNo);
+    return this.httpcli.get(this.url+"name?id"+rAccNo);
     // return {"rname" : this.name[rAccNo-1]}
   }
 
@@ -47,12 +47,14 @@ export class BackendConnService {
   SncLis = "Ibrahim, Khan, Modi, Gunda"
   //------
   chkSanc(name:string) {
+    // let SncLis= this.httpcli.get(this.url+"SncLis");
     if(name!="" && this.SncLis.includes(name)) return true;
     else return false;
   }
 
   getMsgCodes() {
-    return ["abc", "bcd","def","efg"]; //sample data
+    return this.httpcli.get(this.url+"MsgCodes");
+    // return ["abc", "bcd","def","efg"]; //sample data
   }
 
   TransactionsList:String[]=[];

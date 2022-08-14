@@ -37,7 +37,7 @@
                 <div *ngIf="instName && BICnum!=0; else nBICdet">
                     Institution Name: <input type="text" [(ngModel)]="instName" class="pVals" disabled><br>
                     Account Holder Number: <input type="text" [(ngModel)]="rAccNo" (ngModelChange)="rConfirm=false;dispRecName()"> <br>
-                    Account Holder Name: <input type="text" [(ngModel)]="rName"> <br><br>
+                    Account Holder Name: <input type="text" [(ngModel)]="rName" (blur)="ckhSnc()"> <br><br>
                     <button type="button" (click)="rConfirm=true" *ngIf="!rConfirm && BICnum!=0 && rName!='' && rAccNo!=0">Confirm</button>
                 </div>
                 <ng-template #nBICdet>

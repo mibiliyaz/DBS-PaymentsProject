@@ -28,10 +28,10 @@ export class HomeComponent implements OnInit {
 
   //function to check if bank is open or not
   isOpen() {
-    // if(this.day=="Sunday" || this.day=="Saturday") {
-    //   alert("Sorry today the bank is closed.");
-    //   this.router.navigate(['']);
-    // }
+    if(this.day=="Sunday" || this.day=="Saturday") {
+      alert("Sorry today the bank is closed.");
+      this.router.navigate(['']);
+    }
   }
 
   //Customer Details
@@ -62,9 +62,11 @@ export class HomeComponent implements OnInit {
   recDetails:any; 
   dispRecName() {
     this.rName = this.bes.getRecDetails(this.rAccNo).rname;
-    //checking sanction list
+  }
+  //checking sanction list
+  ckhSnc() {
     if(this.bes.chkSanc(this.rName)) {
-      alert("Name match sanction list.");
+      alert("Name match sanction list."); 
       this.router.navigate(['']);
     }
   }

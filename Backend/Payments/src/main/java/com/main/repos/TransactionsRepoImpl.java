@@ -26,10 +26,11 @@ public class TransactionsRepoImpl implements TransactionsRepo {
 	}
 
 	@Override
-	public Transactions get(String transaction_id) {
+	public List<Transactions> get(String cust_id) {
 		Session currentSession = entityMgnr.unwrap(Session.class);
-		Transactions transactions = currentSession.get(Transactions.class, transaction_id);
-		return transactions;
+		Query<Transactions> query = currentSession.createQuery("from Transactions where customer_id="+cust_id, Transactions.class);
+		List<Transactions> list = query.getResultList();
+		return list;
 	}
 
 	@Override

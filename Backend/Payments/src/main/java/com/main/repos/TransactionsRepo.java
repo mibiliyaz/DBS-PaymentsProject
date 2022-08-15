@@ -7,7 +7,7 @@ import com.main.model.Transactions;
 public interface TransactionsRepo {
 	
 	List<Transactions> get();
-	Transactions get(String customer_id);
+	List<Transactions> get(String customer_id);
 	void transaction(Transactions transc);
 
 }

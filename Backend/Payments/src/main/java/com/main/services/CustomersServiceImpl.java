@@ -29,9 +29,8 @@ public class CustomersServiceImpl implements CustomersService {
 
 	@Transactional
 	@Override
-	public void update(Customers customers){//, String cust_id, String receiver_id, double amount) {
-		customersRepo.update(customers);//, cust_id, receiver_id, amount);
-		
+	public Customers update(Customers customers){//, String cust_id, String receiver_id, double amount) {
+		return customersRepo.update(customers);//, cust_id, receiver_id, amount);
 	}
 
 }

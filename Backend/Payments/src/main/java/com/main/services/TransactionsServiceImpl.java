@@ -23,7 +23,7 @@ public class TransactionsServiceImpl implements TransactionsService {
 
 	@Transactional
 	@Override
-	public Transactions get(String transaction_id) {
+	public List<Transactions> get(String transaction_id) {
 		return transactionsRepo.get(transaction_id);
 	}
 

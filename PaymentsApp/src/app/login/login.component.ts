@@ -18,10 +18,17 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if(this.uname=="" || this.upswd=="")
       alert("Username or Password cannot be blank");
-    else if(this.bes.validateLogin(this.uname, this.upswd)) 
-      this.router.navigate(['/home']);
+    else if(this.bes.validateLogin(this.uname, this.upswd)!=null) {
+        this.bes.validateLogin(this.uname,this.upswd).subscribe(data => {
+        if(this.uname!=null && this.uname==data.uname && this.upswd==data.pswd) this.router.navigate(['/home']);
+        else alert("Entered username and/or password is incorrect.");
+      },
+      (error) => {
+        console.error('error caught in component')
+      });
+    }
     else 
-      alert("Entered username and/or password is incorrect.")
+      this.router.navigate(['']);
   }
   forgot() {
     alert("This action is temporarily disabled.");

@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router } from '@angular/router'; 
 import { BackendConnService } from '../backend-conn.service';
+import { Banks } from '../Models/banks';
+import { Customers } from '../Models/customers';
+import { Message } from '../Models/message';
+import { Transactions } from '../Models/transactions';
 
 @Component({
   selector: 'app-home',
@@ -12,6 +16,7 @@ export class HomeComponent implements OnInit {
   constructor(private router: Router, private bes: BackendConnService) { }
 
   ngOnInit(): void {
+    this.bes.getMsgCodes().subscribe(data => this.msgCodes=data);
   }
 
   //sections handiling
@@ -35,33 +40,41 @@ export class HomeComponent implements OnInit {
   }
 
   //Customer Details
-  cId=0;
-  cName="";
-  cBal=0;
-  overdraft="";
+  cId:string="";
+  cName:string="";
+  cBal:number=0;
+  overdraft:string="";
   //getting customer details
-  custDetails:any;
+  visibleS:boolean=false;
+  custDetails:Customers = new Customers();
   dispD() {
-    this.custDetails = this.bes.getCustDetails(this.cId);
-    this.cName=this.custDetails.name;
-    this.cBal=this.custDetails.bal;
-    this.overdraft=this.custDetails.od;
-    this.sConfirm=false;
+    this.visibleS=false;
+    this.bes.getCustDetails(this.cId).subscribe(data => this.custDetails=data);
+    if(this.custDetails != null) {
+      this.visibleS = true;
+      this.cName=this.custDetails.cust_name;
+      this.cBal=this.custDetails.clear_balance;
+      this.overdraft=this.custDetails.overdraft;
+      this.sConfirm=false;
+    }
   }
 
-  //Receiver details
-  BICnum = 0;
-  instName = "";
-  rAccNo = 0;
-  rName="";
   //getting Bank Details
+  BICnum = "";
+  instName = "";
+  bnk:Banks = new Banks();
   dispBICD() {
-    this.instName = this.bes.getBankDetails(this.BICnum);
+    this.bes.getBankDetails(this.BICnum).subscribe(data => this.bnk=data);
+    if(this.bnk != null) this.instName=this.bnk.bname;
+    // this.instName = this.bes.getBankDetails(this.BICnum);
   }
   //getting Receiver Details
-  recDetails:any; 
+  rAccNo = "";
+  rName="";
+  recDetails:Customers = new Customers(); 
   dispRecName() {
-    this.rName = this.bes.getRecDetails(this.rAccNo).rname;
+    this.bes.getCustDetails(this.rAccNo).subscribe(data => this.recDetails=data);
+    if(this.recDetails!=null) this.rName=this.recDetails.cust_name;
   }
   //checking sanction list
   ckhSnc() {
@@ -72,13 +85,14 @@ export class HomeComponent implements OnInit {
   }
 
   //Transaction Details
-  transacType ="";
-  TransactionsList:String[]=this.bes.TransactionsList;
+  transacType:number;
+  trty:{[key:string]:number} = {"1. Bank Transfer":1, "2. Customer Transfer":2, "3. Self Transfer":3};
   selTransacType(tt:string) {
-    this.transacType = tt;
+    if(this.trty[tt]==0) alert("Please select the transfer type");
+    else this.transacType = this.trty[tt];
   }
   //getting message codes
-  msgCodes = this.bes.getMsgCodes();
+  msgCodes:Message[] = [];
   msgCode="";
   msgCsel(mc:string) {
     this.msgCode = mc;
@@ -115,17 +129,33 @@ export class HomeComponent implements OnInit {
     let bal = this.cBal = this.TcBal;
     let od = (this.oda)?this.amt-this.cBal : this.odLimit;
     let TrnsStmt = this.cId+" "+this.cName+" Transfered Rs. "+this.amt+" to "+this.rAccNo+" "+this.rName+" ("+this.BICnum+" - "+this.instName+") on "+this.fullDate;
-    this.bes.updateBal(bal, od, TrnsStmt, this.transacType, this.msgCode);
+    let transactioned:Transactions = new Transactions()
+    transactioned.transaction_id=this.bes.TransactionsList.length+1+"";
+    transactioned.amount=this.amt;
+    transactioned.customer_id=this.cId;
+    transactioned.customer_name=this.cName;
+    transactioned.receiver_id=this.rAccNo;
+    transactioned.receiver_name=this.rName;
+    transactioned.receiver_bic=this.BICnum;
+    transactioned.receiver_bname=this.instName;
+    transactioned.message_code=this.msgCode;
+    transactioned.transfer_type=this.transacType;
+    transactioned.timestamp = this.retdate(new Date);
+    this.bes.submitTransaction(transactioned, TrnsStmt).subscribe(transac => console.log(transac));
     this.sConfirm=false; 
     this.rConfirm=false
     this.transcmp = true;
   }
+  retdate(date:Date) {
+    return date.getFullYear()+"-"+(( (date.getMonth()+1) < 10 ) ? ("0"+(date.getMonth()+1)):(date.getMonth()+1))+"-"+date.getDate();
+  }
+  TransactionsList:String[]=this.bes.TransactionsList;
   clearr() {
-    this.cId = 0;
+    this.cId = "";
     this.dispD();
-    this.BICnum = 0;
+    this.BICnum = "";
     this.dispBICD();
-    this.rAccNo = 0;
+    this.rAccNo = "";
     this.dispRecName();
     this.amt = 0;
     this.transFee = 0;

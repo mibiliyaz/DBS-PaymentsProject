@@ -10,9 +10,9 @@
         <td>
             <div class="fS">
                 Customer ID: <input type="text" [(ngModel)]="cId" (ngModelChange)="dispD()"> <br>
-                <div *ngIf="cName; else ndet">
+                <div *ngIf="visibleS && cName && cId else ndet">
                     Customer Name: <input type="text" [(ngModel)]="cName" disabled class="pVals"><br>
-                    Account Balance: <input type="text" [(ngModel)]="cBal" disabled class="pVals" width="100px"><p *ngIf="cBal<0"> Overdue</p><br><br>
+                    Account Balance: <input type="text" [(ngModel)]="cBal" disabled class="pVals" width="100px"><span *ngIf="cBal<0" style="color: red;"> Overdue</span><br><br>
                     <button type="button" (click)="sConfirm=true" *ngIf="!sConfirm">Confirm</button>
                 </div>
                 <ng-template #ndet>
@@ -34,11 +34,11 @@
         <td>
             <div class="fS">
                 BIC: <input type="text" [(ngModel)]="BICnum" (ngModelChange)="dispBICD()"> <br>
-                <div *ngIf="instName && BICnum!=0; else nBICdet">
+                <div *ngIf="instName && BICnum; else nBICdet">
                     Institution Name: <input type="text" [(ngModel)]="instName" class="pVals" disabled><br>
                     Account Holder Number: <input type="text" [(ngModel)]="rAccNo" (ngModelChange)="rConfirm=false;dispRecName()"> <br>
                     Account Holder Name: <input type="text" [(ngModel)]="rName" (blur)="ckhSnc()"> <br><br>
-                    <button type="button" (click)="rConfirm=true" *ngIf="!rConfirm && BICnum!=0 && rName!='' && rAccNo!=0">Confirm</button>
+                    <button type="button" (click)="rConfirm=true" *ngIf="!rConfirm && BICnum && rName!='' && rAccNo!=''">Confirm</button>
                 </div>
                 <ng-template #nBICdet>
                     
@@ -54,16 +54,15 @@
         <td>
             <div class="fS">
                 Transfer Type:    
-                    <select #tType (change)="selTransacType(tType.value)">  
-                        <option disabled>Select TransferType</option>  
-                        <option default>Bank Transfer</option>
-                        <option>Customer Transfer</option>
-                        <option>Self Transfer</option>
+                    <select #tType (blur)="selTransacType(tType.value)">
+                        <option>1. Bank Transfer</option>
+                        <option>2. Customer Transfer</option>
+                        <option>3. Self Transfer</option>
                     </select><br>
                 Message Code:
-                    <select #msgCode (change)="msgCsel(msgCode.value)">
-                        <option *ngFor="let msgCod of msgCodes">{{msgCod}}</option>
-                    </select><br>
+                    <select #msgCode (blur)="msgCsel(msgCode.value)">
+                        <option *ngFor="let msgCod of msgCodes">{{msgCod.message_code}}</option>
+                    </select> <br>
                 Amount: <input type="number" [(ngModel)]="amt" (ngModelChange)="amtS()"><span style="color: green;">{{odStmt}}</span><br>
                 Transfer fee: <input type="text" [(ngModel)]="transFee" class="pVals" disabled> <br>
                 Clear Balance: <input type="text" [(ngModel)]="TcBal" class="pVals" disabled><br><br>
@@ -77,7 +76,8 @@
     <img src="https://raw.githubusercontent.com/mibiliyaz/DBS-PaymentsProject/main/imgs/transCmp.png" width="100" height="100" alt="TransactionCompleted"> 
     <h1>Transaction Completed Successfully</h1>
     <h3>Thank you for Banking with DBS</h3><br>
-    <a [routerLink]="['home']" (click)="tConfirm=false;clearr();"><h4 style="color: black; ">DONE</h4></a>
+    <a routerLink="." (click)="tConfirm=false;clearr();"><h4 style="color: black; ">DONE</h4></a>
 </div>
 </div>
 <a routerLink="" routerLinkActive="active"><img id="logout" src="https://raw.githubusercontent.com/mibiliyaz/DBS-PaymentsProject/main/imgs/sign-out-icon.png" alt="Logout"></a>
+<!-- [routerLink]="['home']" -->

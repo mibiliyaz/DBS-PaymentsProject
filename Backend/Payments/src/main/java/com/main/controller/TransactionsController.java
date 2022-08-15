@@ -3,6 +3,7 @@ package com.main.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.main.model.Transactions;
 import com.main.services.TransactionsService;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/transactionsapi")
 public class TransactionsController {
@@ -31,8 +33,8 @@ public class TransactionsController {
 		return transactions;
 	}
 	
-	@GetMapping("/{tid}")
-	public Transactions get(@PathVariable String tid) {
-		return transactionsService.get(tid);
+	@GetMapping("/transactions/{cid}")
+	public List<Transactions> get(@PathVariable String cid) {
+		return transactionsService.get(cid);
 	}
 }

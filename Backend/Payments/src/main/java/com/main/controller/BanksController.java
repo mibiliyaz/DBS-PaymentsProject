@@ -3,6 +3,7 @@ package com.main.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.main.model.Banks;
 import com.main.services.BanksService;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/banksapi")
 public class BanksController {
@@ -23,7 +25,7 @@ public class BanksController {
 		return banksService.get();
 	}
 	
-	@GetMapping("/{bic}")
+	@GetMapping("/banks/{bic}")
 	public Banks get(@PathVariable String bic) {
 		return banksService.get(bic);
 	}

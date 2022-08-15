@@ -13,7 +13,7 @@ public class Transactions {
 	
 	@Id
 	@Column
-	private String transaction_id;
+	private int transaction_id;
 	@Column
 	private double amount;
 	@Column
@@ -40,11 +40,10 @@ public class Transactions {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Transactions(String transaction_id, double amount, String customer_id, String customer_name,
+	public Transactions(double amount, String customer_id, String customer_name,
 			String receiver_id, String receiver_name, String receiver_bic, String receiver_bname, String message_code,
 			int transfer_type, Date timestamp) {
 		super();
-		this.transaction_id = transaction_id;
 		this.amount = amount;
 		this.customer_id = customer_id;
 		this.customer_name = customer_name;
@@ -55,14 +54,6 @@ public class Transactions {
 		this.message_code = message_code;
 		this.transfer_type = transfer_type;
 		this.timestamp = timestamp;
-	}
-
-	public String getTransaction_id() {
-		return transaction_id;
-	}
-
-	public void setTransaction_id(String transaction_id) {
-		this.transaction_id = transaction_id;
 	}
 
 	public double getAmount() {
@@ -147,7 +138,7 @@ public class Transactions {
 
 	@Override
 	public String toString() {
-		return "Transactions [transaction_id=" + transaction_id + ", amount=" + amount + ", customer_id=" + customer_id
+		return "Transactions [amount=" + amount + ", customer_id=" + customer_id
 				+ ", customer_name=" + customer_name + ", receiver_id=" + receiver_id + ", receiver_name="
 				+ receiver_name + ", receiver_bic=" + receiver_bic + ", receiver_bname=" + receiver_bname
 				+ ", message_code=" + message_code + ", transfer_type=" + transfer_type + ", timestamp=" + timestamp

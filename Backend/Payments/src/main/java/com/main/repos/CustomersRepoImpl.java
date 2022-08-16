@@ -33,9 +33,9 @@ public class CustomersRepoImpl implements CustomersRepo {
 	}
 
 	@Override
-	public Customers update(Customers customers){// ,String cust_id, String receiver_id, double amount) {
+	public Customers update(Customers customers) {
 		Session currentSession = entityMgnr.unwrap(Session.class);
-		currentSession.saveOrUpdate(customers);
+		currentSession.update(customers);
 		return customers;
 	}
 

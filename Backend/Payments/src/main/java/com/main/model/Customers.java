@@ -5,10 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.springframework.context.annotation.Scope;
-
 @Entity
-@Scope("prototype")
 @Table(name="customers")
 public class Customers {
 
@@ -18,7 +15,7 @@ public class Customers {
 	@Column
 	private String cust_name;
 	@Column
-	private String clear_balance;
+	private double clear_balance;
 	@Column
 	private String overdraft;
 	
@@ -26,7 +23,7 @@ public class Customers {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Customers(String cust_id, String cust_name, String clear_balance, String overdraft) {
+	public Customers(String cust_id, String cust_name, double clear_balance, String overdraft) {
 		super();
 		this.cust_id = cust_id;
 		this.cust_name = cust_name;
@@ -45,10 +42,10 @@ public class Customers {
 	public void setCust_name(String cust_name) {
 		this.cust_name = cust_name;
 	}
-	public String getClear_balance() {
+	public double getClear_balance() {
 		return clear_balance;
 	}
-	public void setClear_balance(String clear_balance) {
+	public void setClear_balance(double clear_balance) {
 		this.clear_balance = clear_balance;
 	}
 	public String getOverdraft() {

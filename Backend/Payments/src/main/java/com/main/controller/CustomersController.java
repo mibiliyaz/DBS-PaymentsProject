@@ -28,7 +28,7 @@ public class CustomersController {
 	}
 	
 	@PutMapping("/customersupdate")
-	public Customers update(@RequestBody Customers customers) {//, String cust_id, String receiver_id, double amount) {
+	public Customers update(@RequestBody Customers customers) {
 		return customersService.update(customers);//, cust_id, receiver_id, amount);
 	}
 	

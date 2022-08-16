@@ -66,7 +66,7 @@
                 Amount: <input type="number" [(ngModel)]="amt" (ngModelChange)="amtS()"><span style="color: green;">{{odStmt}}</span><br>
                 Transfer fee: <input type="text" [(ngModel)]="transFee" class="pVals" disabled> <br>
                 Clear Balance: <input type="text" [(ngModel)]="TcBal" class="pVals" disabled><br><br>
-                <button type="button" (click)="Transed(); tConfirm=true;" *ngIf="amt">Confirm</button>
+                <button type="button" (click)="Transed();" *ngIf="amt">Confirm</button>
             </div>
         </td>
     </tr>
@@ -80,4 +80,3 @@
 </div>
 </div>
 <a routerLink="" routerLinkActive="active"><img id="logout" src="https://raw.githubusercontent.com/mibiliyaz/DBS-PaymentsProject/main/imgs/sign-out-icon.png" alt="Logout"></a>
-<!-- [routerLink]="['home']" -->

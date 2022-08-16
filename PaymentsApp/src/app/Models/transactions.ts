@@ -1,5 +1,4 @@
 export class Transactions {
-    transaction_id:string;
     amount:number;
     customer_id:string;
     customer_name:string;

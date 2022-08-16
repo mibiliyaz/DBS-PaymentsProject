@@ -51,11 +51,11 @@ export class HomeComponent implements OnInit {
     this.visibleS=false;
     this.bes.getCustDetails(this.cId).subscribe(data => this.custDetails=data);
     if(this.custDetails != null) {
-      this.visibleS = true;
       this.cName=this.custDetails.cust_name;
       this.cBal=this.custDetails.clear_balance;
       this.overdraft=this.custDetails.overdraft;
       this.sConfirm=false;
+      this.visibleS = true;
     }
   }
 
@@ -64,9 +64,9 @@ export class HomeComponent implements OnInit {
   instName = "";
   bnk:Banks = new Banks();
   dispBICD() {
+    this.BICnum = this.BICnum.toUpperCase();
     this.bes.getBankDetails(this.BICnum).subscribe(data => this.bnk=data);
     if(this.bnk != null) this.instName=this.bnk.bname;
-    // this.instName = this.bes.getBankDetails(this.BICnum);
   }
   //getting Receiver Details
   rAccNo = "";
@@ -78,18 +78,19 @@ export class HomeComponent implements OnInit {
   }
   //checking sanction list
   ckhSnc() {
-    if(this.bes.chkSanc(this.rName)) {
-      alert("Name match sanction list."); 
-      this.router.navigate(['']);
-    }
+    this.bes.chkSanc(this.rName).subscribe(data => {
+      if(data==true) {
+        alert("Name match sanction list.");
+        this.router.navigate(['']);
+      }
+    });
   }
 
   //Transaction Details
   transacType:number;
   trty:{[key:string]:number} = {"1. Bank Transfer":1, "2. Customer Transfer":2, "3. Self Transfer":3};
   selTransacType(tt:string) {
-    if(this.trty[tt]==0) alert("Please select the transfer type");
-    else this.transacType = this.trty[tt];
+    this.transacType = this.trty[tt];
   }
   //getting message codes
   msgCodes:Message[] = [];
@@ -126,36 +127,50 @@ export class HomeComponent implements OnInit {
   }
   
   Transed() {
-    let bal = this.cBal = this.TcBal;
-    let od = (this.oda)?this.amt-this.cBal : this.odLimit;
-    let TrnsStmt = this.cId+" "+this.cName+" Transfered Rs. "+this.amt+" to "+this.rAccNo+" "+this.rName+" ("+this.BICnum+" - "+this.instName+") on "+this.fullDate;
-    let transactioned:Transactions = new Transactions()
-    transactioned.transaction_id=this.bes.TransactionsList.length+1+"";
-    transactioned.amount=this.amt;
-    transactioned.customer_id=this.cId;
-    transactioned.customer_name=this.cName;
-    transactioned.receiver_id=this.rAccNo;
-    transactioned.receiver_name=this.rName;
-    transactioned.receiver_bic=this.BICnum;
-    transactioned.receiver_bname=this.instName;
-    transactioned.message_code=this.msgCode;
-    transactioned.transfer_type=this.transacType;
-    transactioned.timestamp = this.retdate(new Date);
-    this.bes.submitTransaction(transactioned, TrnsStmt).subscribe(transac => console.log(transac));
-    this.sConfirm=false; 
-    this.rConfirm=false
-    this.transcmp = true;
+    if(!(this.cName.toLowerCase().includes("BANK") && this.transacType!=1)) {
+      let bal = this.cBal = this.TcBal;
+      let od = (this.oda)?this.amt-this.cBal : this.odLimit;
+      let TrnsStmt = this.cId+" "+this.cName+" Transfered Rs. "+this.amt+" to "+this.rAccNo+" "+this.rName+" ("+this.BICnum+" - "+this.instName+") on "+this.fullDate;
+      let transactioned:Transactions = new Transactions();
+      transactioned.amount=this.amt;
+      transactioned.customer_id=this.cId;
+      transactioned.customer_name=this.cName;
+      transactioned.receiver_id=this.rAccNo;
+      transactioned.receiver_name=this.rName;
+      transactioned.receiver_bic=this.BICnum;
+      transactioned.receiver_bname=this.instName;
+      transactioned.message_code=this.msgCode;
+      transactioned.transfer_type=this.transacType;
+      transactioned.timestamp = this.retdate(new Date);
+      this.bes.submitTransaction(transactioned, TrnsStmt).subscribe(transac => {console.log(transac);},
+        err => {this.transcmp = false;console.error(err);},
+        () => {this.transcmp = true;console.log("successed");
+      });
+      let custo:Customers = new Customers();
+      custo.cust_id=this.custDetails.cust_id;
+      custo.cust_name=this.custDetails.cust_name;
+      custo.clear_balance=this.cBal
+      custo.overdraft=this.custDetails.overdraft;
+      console.log(custo);
+      this.bes.updateCustomerBal(custo).subscribe(cdata => console.log(cdata));
+      this.sConfirm=false; 
+      this.rConfirm=false;
+      this.tConfirm=true;
+    }
+    else alert("Transfer type must be Bank Transfer");
+
   }
   retdate(date:Date) {
     return date.getFullYear()+"-"+(( (date.getMonth()+1) < 10 ) ? ("0"+(date.getMonth()+1)):(date.getMonth()+1))+"-"+date.getDate();
   }
-  TransactionsList:String[]=this.bes.TransactionsList;
+  TransactionsList:String[] = this.bes.TransactionsList;
   clearr() {
     this.cId = "";
     this.dispD();
     this.BICnum = "";
     this.dispBICD();
     this.rAccNo = "";
+    this.rName = "";
     this.dispRecName();
     this.amt = 0;
     this.transFee = 0;

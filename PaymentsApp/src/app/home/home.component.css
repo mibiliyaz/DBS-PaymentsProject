@@ -40,6 +40,11 @@ td {
     margin-left: 300px;
     background-color: white;
 }
+.cnfrm {
+    background-color: greenyellow;
+    border-color: darkgray;
+    /* color: white; */
+}
 #logout {
     position: absolute;
     right: 15px;

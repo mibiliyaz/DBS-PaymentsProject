@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.bes.getMsgCodes().subscribe(data => this.msgCodes=data);
+
   }
 
   //sections handiling
@@ -49,7 +50,11 @@ export class HomeComponent implements OnInit {
   custDetails:Customers = new Customers();
   dispD() {
     this.visibleS=false;
-    this.bes.getCustDetails(this.cId).subscribe(data => this.custDetails=data);
+    this.bes.getCustDetails(this.cId).subscribe(data => this.custDetails=data,
+      err => {
+        alert("Maybe backend not connected.");
+      }
+    );
     if(this.custDetails != null) {
       this.cName=this.custDetails.cust_name;
       this.cBal=this.custDetails.clear_balance;
@@ -95,9 +100,11 @@ export class HomeComponent implements OnInit {
   //getting message codes
   msgCodes:Message[] = [];
   msgCode="";
+  msgStmt:string="";
   msgCsel(mc:string) {
     this.msgCode = mc;
   }//-----
+
   odLimit=25000;
   amt=0;
   transFee=0;
@@ -107,30 +114,40 @@ export class HomeComponent implements OnInit {
   odStmt="";
 
   amtS() {
-    this.odStmt='';
-    this.transFee = (this.amt/100)*this.trnsfeechrg;
-    if(this.amt<=this.cBal-this.trnsfeechrg) {
-      this.TcBal=this.cBal - this.amt - this.transFee;
-    }
-    else if (this.overdraft == "yes" && this.amt<=this.cBal+this.odLimit) {
-      this.TcBal=this.cBal - this.amt - this.transFee;
-      this.oda=true;
-      this.odStmt=" Overdraft facility availed.";
+    if(this.amt>=0){
+      this.odStmt='';
+      this.transFee = (this.amt/100)*this.trnsfeechrg;
+      if(this.amt<=this.cBal-this.trnsfeechrg) {
+        this.TcBal=this.cBal - this.amt - this.transFee;
+      }
+      else if (this.overdraft == "yes" && this.amt<=this.cBal+this.odLimit) {
+        this.TcBal=this.cBal - this.amt - this.transFee;
+        this.oda=true;
+        this.odStmt=" Overdraft facility availed.";
+      }
+      else {
+        alert("Transfer amount must be less then current balance.");
+        this.odStmt = (this.overdraft=="yes")?" Overdraft facility available.":"";
+        this.transFee = (this.cBal/100)*this.trnsfeechrg;
+        this.amt = this.cBal - this.transFee;
+        this.TcBal = this.cBal-this.amt-this.transFee;
+      }
     }
     else {
-      alert("Transfer amount must be less then current balance.");
-      this.odStmt = (this.overdraft=="yes")?" Overdraft facility available.":"";
-      this.transFee = (this.cBal/100)*this.trnsfeechrg;
-      this.amt = this.cBal - this.transFee;
-      this.TcBal = this.cBal-this.amt-this.transFee;
+      alert("Amount cannot be negative.");
+      this.amt=0;
     }
   }
   
   Transed() {
-    if(!(this.cName.toLowerCase().includes("BANK") && this.transacType!=1)) {
+    if(!this.cName.toUpperCase().includes("BANK") && this.transacType==1) 
+      alert("Transfer type isn't Bank Transfer please update it.");
+    else if(this.cName.toUpperCase().includes("BANK") && this.transacType!=1)
+      alert("Transfer type must be Bank Transfer");    
+    else {
       let bal = this.cBal = this.TcBal;
       let od = (this.oda)?this.amt-this.cBal : this.odLimit;
-      let TrnsStmt = this.cId+" "+this.cName+" Transfered Rs. "+this.amt+" to "+this.rAccNo+" "+this.rName+" ("+this.BICnum+" - "+this.instName+") on "+this.fullDate;
+      let TrnsStmt = this.cId+" "+this.cName+" Transfered Rs. "+this.amt+" to "+this.rAccNo+" "+this.rName+" ("+this.BICnum+" - "+this.instName+") on "+this.fullDate+"\n";
       let transactioned:Transactions = new Transactions();
       transactioned.amount=this.amt;
       transactioned.customer_id=this.cId;
@@ -157,7 +174,6 @@ export class HomeComponent implements OnInit {
       this.rConfirm=false;
       this.tConfirm=true;
     }
-    else alert("Transfer type must be Bank Transfer");
 
   }
   retdate(date:Date) {

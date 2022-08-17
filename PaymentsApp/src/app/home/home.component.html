@@ -13,7 +13,7 @@
                 <div *ngIf="visibleS && cName && cId else ndet">
                     Customer Name: <input type="text" [(ngModel)]="cName" disabled class="pVals"><br>
                     Account Balance: <input type="text" [(ngModel)]="cBal" disabled class="pVals" width="100px"><span *ngIf="cBal<0" style="color: red;"> Overdue</span><br><br>
-                    <button type="button" (click)="sConfirm=true" *ngIf="!sConfirm">Confirm</button>
+                    <button type="button" (click)="sConfirm=true" *ngIf="!sConfirm" class="cnfrm">Confirm</button>
                 </div>
                 <ng-template #ndet>
                     <span style="color: red;">Enter valid customer id to display customer details.</span>
@@ -38,7 +38,7 @@
                     Institution Name: <input type="text" [(ngModel)]="instName" class="pVals" disabled><br>
                     Account Holder Number: <input type="text" [(ngModel)]="rAccNo" (ngModelChange)="rConfirm=false;dispRecName()"> <br>
                     Account Holder Name: <input type="text" [(ngModel)]="rName" (blur)="ckhSnc()"> <br><br>
-                    <button type="button" (click)="rConfirm=true" *ngIf="!rConfirm && BICnum && rName!='' && rAccNo!=''">Confirm</button>
+                    <button type="button" (click)="rConfirm=true" *ngIf="!rConfirm && BICnum && rName!='' && rAccNo!=''" class="cnfrm">Confirm</button>
                 </div>
                 <ng-template #nBICdet>
                     
@@ -66,7 +66,7 @@
                 Amount: <input type="number" [(ngModel)]="amt" (ngModelChange)="amtS()"><span style="color: green;">{{odStmt}}</span><br>
                 Transfer fee: <input type="text" [(ngModel)]="transFee" class="pVals" disabled> <br>
                 Clear Balance: <input type="text" [(ngModel)]="TcBal" class="pVals" disabled><br><br>
-                <button type="button" (click)="Transed();" *ngIf="amt">Confirm</button>
+                <button type="button" (click)="Transed();" *ngIf="amt" class="cnfrm">Confirm</button>
             </div>
         </td>
     </tr>
